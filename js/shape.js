@@ -68,4 +68,10 @@ class Enemy extends Shape {
   renewCOORDE(enemyCtx, xEnemy, yEnemy, sizeEnemy) {
     this.drawEnemy(enemyCtx, xEnemy, yEnemy, sizeEnemy);
   }
+  checkCollision(enemyCtx, spaceship,enemy) {
+    if((spaceship.x+(enemyCtx.canvas.width / 10) >= this.x-this.sizeEnemy && spaceship.x <= this.x-this.sizeEnemy)&&(spaceship.y+enemyCtx.canvas.height/10 >= this.y-this.sizeEnemy && spaceship.y <= this.y+this.sizeEnemy)){
+      if(enemy.length >0)
+        return 1;
+    }
+  }
 }

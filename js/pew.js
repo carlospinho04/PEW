@@ -32,8 +32,8 @@ function main() {
   var y = shipCtx.canvas.height / 2;
   var x = 0;
   //Var aux lvl
-  var acceleration = 999;
-  var points=0;
+  var acceleration = 500;
+  var points = 0;
   //Main spaceship
   var spaceship = new SpaceShip(x, y);
   spaceship.drawShip(shipCtx, x, y);
@@ -95,16 +95,16 @@ function main() {
 
   }
   //Shoot move
-  setInterval(function() {
+  var Shootint = setInterval(function() {
     shootMove(shoots, extraCtx, enemy);
   }, 50);
   //Spam enemy
-  setInterval(function() {
+  var Spamtint = setInterval(function() {
     randomEnemy(enemyCtx, yEnemy, xEnemy, heightMin, heightMax, sizeEnemy, enemyAux, enemy);
   }, acceleration);
   //Ememy move
-  setInterval(function() {
-    enemyMove(enemy, enemyCtx);
+  var Enemytint = setInterval(function() {
+    enemyMove(enemy, enemyCtx, spaceship, Shootint, Spamtint, Enemytint);
   }, 100);
 
 
@@ -130,35 +130,48 @@ function drawCanvas(canvasName) {
   return ctx;
 }
 
-function shootMove(shoots, extraCtx, enemy,heightMax) {
+function shootMove(shoots, extraCtx, enemy, heightMax) {
   var i = 0;
-  var aux=0;
+  var aux = 0;
   extraCtx.clearRect(0, 0, extraCtx.canvas.width, extraCtx.canvas.height);
   for (i = 0; i < shoots.length; i++) {
     if (shoots[i].x < extraCtx.canvas.width) {
       shoots[i].x += extraCtx.canvas.height / 20;
       shoots[i].renewCOORDS(extraCtx, shoots[i].x, shoots[i].y);
-      aux=shoots[i].checkCollision(enemy,extraCtx,heightMax);
-      if(aux == 1){
-          shoots.shift();
+      aux = shoots[i].checkCollision(enemy, extraCtx, heightMax);
+      if (aux == 1) {
+        shoots.shift();
       }
-    }
-    else {
+    } else {
       shoots.shift();
     }
   }
 }
 
-function enemyMove(enemy, enemyCtx) {
+function enemyMove(enemy, enemyCtx, spaceship, Shootint, Spamtint, Enemytint) {
   var z = 0;
+  var aux = 0;
   enemyCtx.clearRect(0, 0, enemyCtx.canvas.width, enemyCtx.canvas.height);
   for (z = 0; z < enemy.length; z++) {
     if (enemy[z].x > -enemy[z].sizeEnemy) {
       enemy[z].x -= enemyCtx.canvas.width / enemy[z].sizeEnemy;
+      aux = enemy[z].checkCollision(enemyCtx, spaceship, enemy);
       enemy[z].renewCOORDE(enemyCtx, enemy[z].x, enemy[z].y, enemy[z].sizeEnemy);
+      if (aux == 1 && enemy.length > 0) {
+        gameOver(Shootint, Spamtint, Enemytint,enemyCtx);
+      }
 
     } else {
-      enemy.splice(z, 1);
+        gameOver(Shootint, Spamtint, Enemytint,enemyCtx);
     }
   }
+}
+
+function gameOver(Shootint, Spamtint, Enemytint,enemyCtx) {
+  clearInterval(Shootint);
+  clearInterval(Spamtint);
+  clearInterval(Enemytint);
+  enemyCtx.font = "30px Arial";
+  enemyCtx.fillStyle = "#111112";
+  enemyCtx.fillText("GameOver",enemyCtx.canvas.width/2,enemyCtx.canvas.height/2);
 }
