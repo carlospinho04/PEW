@@ -1,0 +1,21 @@
+{
+  "extends": [
+  "react-app",
+  "plugin:flowtype/recommended"
+
+  ],
+  "plugins": [
+  "flowtype"
+
+  ],
+  "parserOptions": {
+    "ecmaVersion": 7,
+    "ecmaFeatures":
+
+    { "experimentalObjectRestSpread": true, "experimentalDecorators": true, "jsx": true  }
+    ,
+    "sourceType": "module"
+
+  }
+
+}
